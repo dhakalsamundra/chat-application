@@ -1,8 +1,17 @@
+import { Container } from "react-bootstrap";
+
+import ApolloProvider from "./ApolloProvider";
+
+import "./App.scss";
+import Register from "./pages/Register";
+
 function App() {
   return (
-    <div className="App">
-      <h1>Hello React App</h1>
-    </div>
+    <ApolloProvider>
+      <Container>
+        <Register />
+      </Container>
+    </ApolloProvider>
   );
 }
 
