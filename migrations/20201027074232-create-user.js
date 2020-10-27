@@ -1,4 +1,7 @@
 'use strict';
+
+const { sequelize } = require("../models");
+
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable('users', {
@@ -18,6 +21,11 @@ module.exports = {
         allowNull: false,
         unique: true,
       },
+      password: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      imageUrl: Sequelize.STRING,
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
