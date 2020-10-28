@@ -3,7 +3,7 @@ const { UserInputError, AuthenticationError } = require('apollo-server')
 const jwt = require('jsonwebtoken')
 const { Op} = require('sequelize')
 
-const { User } = require('../../models')
+const { User, Message } = require('../../models')
 const { JWT_SECRET} = require('../../config/env.json')
 
 module.exports ={
@@ -13,8 +13,21 @@ module.exports ={
           if(!user) throw new AuthenticationError('Unauthenticated')
         
         // Op.ne = operator not equal to will get all the user expect the token user
-          const users = await User.findAll({
+          let users = await User.findAll({
+            attributes: ['username', 'imageUrl', 'createdAt'],
             where: { username: { [Op.ne]: user.username}}
+          })
+          const allUserMessages = await Message.findAll({
+            where: {
+              [Op.or]: [{ from: user.username}, { to: user.username}]
+            },
+            order: [['createdAt', 'DESC']]
+          })
+
+          users = users.map(restUser => {
+            const latestMessage = allUserMessages.find(m=> m.from === restUser.username || m.to === restUser.username)
+            restUser.latestMessage = latestMessage
+            return restUser
           })
           return users
         } catch(error){
