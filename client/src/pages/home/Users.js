@@ -19,8 +19,8 @@ const GET_USERS = gql`
         createdAt
       }
     }
-  }
-`;
+  }`
+
 export default function Users() {
   const dispatch = useMessageDispatch();
   const { users } = useMessageState();
@@ -45,19 +45,19 @@ export default function Users() {
         return(
       <div
         role="button"
-        className={classNames('user d-flex p-3', {
+        className={classNames('user d-flex justify-content-center justify-content-md-start p-3', {
             'bg-white': selected,
         })}
         key={user.username}
         onClick={() => dispatch({type: 'SET_SELECTED_USER', payload: user.username})}
       >
         <Image
-          src={user.imageUrl}
-          roundedCircle
-          className="mr-2"
-          style={{ width: 50, height: 50, objectFit: "cover" }}
+          src={user.imageUrl ||
+            'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y'
+          }
+          className="user-image"
         />
-        <div>
+        <div className="d-none d-md-block ml-2">
           <p className="text-success">{user.username}</p>
           <p className="font-weight-light">
             {user.latestMessage
@@ -69,7 +69,7 @@ export default function Users() {
     )});
   }
   return (
-    <Col xs={4} className="p-0 bg-secondary">
+    <Col xs={2} md={4} className="p-0 bg-secondary">
       {usersMarkup}
     </Col>
   );
