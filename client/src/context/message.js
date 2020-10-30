@@ -4,53 +4,54 @@ const MessageStateContext = createContext()
 const MessageDispatchContext = createContext()
 
 const messageReducer = (state, action) => {
-  let usersCopy, userIndex
-  const { username, message, messages } = action.payload
+    let duplicateUsers, userIndex
+    const { username, message, messages } = action.payload
+
   switch (action.type) {
-    case 'SET_USERS':
-      return {
-        ...state,
-        users: action.payload,
-      }
-    case 'SET_USER_MESSAGES':
-      usersCopy = [...state.users]
+      case 'SET_USERS':
+          return {
+              ...state,
+              users: action.payload
+          }
+        case 'SET_USER_MESSAGES':
+          duplicateUsers = [...state.users]
 
-      userIndex = usersCopy.findIndex((u) => u.username === username)
+           userIndex = duplicateUsers.findIndex((u) => u.username === username)
+    
+          duplicateUsers[userIndex] = { ...duplicateUsers[userIndex], messages }
+    
+          return {
+            ...state,
+            users: duplicateUsers,
+          }
+        
+        case 'SET_SELECTED_USER':
+            duplicateUsers = state.users.map(user => ({
+                ...user,
+                selected: user.username === action.payload
+            }))
+            return {
+                ...state,
+                users: duplicateUsers
+            }
+        case 'ADD_MESSAGE':
+          duplicateUsers = [...state.users]
 
-      usersCopy[userIndex] = { ...usersCopy[userIndex], messages }
-
-      return {
-        ...state,
-        users: usersCopy,
-      }
-    case 'SET_SELECTED_USER':
-      usersCopy = state.users.map((user) => ({
-        ...user,
-        selected: user.username === action.payload,
-      }))
-
-      return {
-        ...state,
-        users: usersCopy,
-      }
-    case 'ADD_MESSAGE':
-      usersCopy = [...state.users]
-
-      userIndex = usersCopy.findIndex((u) => u.username === username)
+      userIndex = duplicateUsers.findIndex((u) => u.username === username)
 
       let newUser = {
-        ...usersCopy[userIndex],
-        messages: usersCopy[userIndex].messages
-          ? [message, ...usersCopy[userIndex].messages]
+        ...duplicateUsers[userIndex],
+        messages: duplicateUsers[userIndex].messages
+          ? [message, ...duplicateUsers[userIndex].messages]
           : null,
         latestMessage: message,
       }
 
-      usersCopy[userIndex] = newUser
+      duplicateUsers[userIndex] = newUser
 
       return {
         ...state,
-        users: usersCopy,
+        users: duplicateUsers,
       }
     default:
       throw new Error(`Unknown action type: ${action.type}`)
