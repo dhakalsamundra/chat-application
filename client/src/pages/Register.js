@@ -1,24 +1,27 @@
 import React, { useState } from 'react'
 import { Row, Col, Form, Button } from 'react-bootstrap'
-import { gql, useMutation } from '@apollo/client';
+import { gql, useMutation } from '@apollo/client'
 import { Link } from 'react-router-dom'
-
-import Spinner from './Spinner'
 
 const REGISTER_USER = gql`
   mutation register(
-      $username: String!
-      $email: String!
-      $password: String!
-      $confirmPassword: String! 
-      ) {
+    $username: String!
+    $email: String!
+    $password: String!
+    $confirmPassword: String!
+  ) {
     register(
-        username: $username email: $email password: $password confirmPassword: $confirmPassword
+      username: $username
+      email: $email
+      password: $password
+      confirmPassword: $confirmPassword
     ) {
-      username email createdAt
+      username
+      email
+      createdAt
     }
   }
-`;
+`
 
 export default function Register(props) {
   const [variables, setVariables] = useState({
@@ -29,14 +32,15 @@ export default function Register(props) {
   })
   const [errors, setErrors] = useState({})
 
-  const [createUser, { loading }] = useMutation(REGISTER_USER, {
-      update:(_, __) => props.history.push('/login'),
-      onError:(error) => setErrors(error.graphQLErrors[0].extensions.errors)
-      })
+  const [registerUser, { loading }] = useMutation(REGISTER_USER, {
+    update: (_, __) => props.history.push('/login'),
+    onError: (err) => setErrors(err.graphQLErrors[0].extensions.errors),
+  })
+
   const submitRegisterForm = (e) => {
     e.preventDefault()
 
-    createUser({ variables })
+    registerUser({ variables })
   }
 
   return (
@@ -46,7 +50,7 @@ export default function Register(props) {
         <Form onSubmit={submitRegisterForm}>
           <Form.Group>
             <Form.Label className={errors.email && 'text-danger'}>
-               {errors.email ?? 'Email address'}
+              {errors.email ?? 'Email address'}
             </Form.Label>
             <Form.Control
               type="email"
@@ -58,8 +62,8 @@ export default function Register(props) {
             />
           </Form.Group>
           <Form.Group>
-          <Form.Label className={errors.username && 'text-danger'}>
-               {errors.username ?? 'Username'}
+            <Form.Label className={errors.username && 'text-danger'}>
+              {errors.username ?? 'Username'}
             </Form.Label>
             <Form.Control
               type="text"
@@ -71,8 +75,8 @@ export default function Register(props) {
             />
           </Form.Group>
           <Form.Group>
-          <Form.Label className={errors.password && 'text-danger'}>
-               {errors.password ?? 'Password'}
+            <Form.Label className={errors.password && 'text-danger'}>
+              {errors.password ?? 'Password'}
             </Form.Label>
             <Form.Control
               type="password"
@@ -84,8 +88,8 @@ export default function Register(props) {
             />
           </Form.Group>
           <Form.Group>
-          <Form.Label className={errors.confirmPassword && 'text-danger'}>
-               {errors.confirmPassword ?? 'Confirm Password'}
+            <Form.Label className={errors.confirmPassword && 'text-danger'}>
+              {errors.confirmPassword ?? 'Confirm password'}
             </Form.Label>
             <Form.Control
               type="password"
@@ -101,7 +105,7 @@ export default function Register(props) {
           </Form.Group>
           <div className="text-center">
             <Button variant="success" type="submit" disabled={loading}>
-              { loading ? <Spinner /> : 'Register'}
+              {loading ? 'loading..' : 'Register'}
             </Button>
             <br />
             <small>
