@@ -3,6 +3,8 @@ import { Row, Col, Form, Button } from 'react-bootstrap'
 import { gql, useMutation } from '@apollo/client'
 import { Link } from 'react-router-dom'
 
+import Spinner from './Spinner'
+
 const REGISTER_USER = gql`
   mutation register(
     $username: String!
@@ -104,9 +106,7 @@ export default function Register(props) {
             />
           </Form.Group>
           <div className="text-center">
-            <Button variant="success" type="submit" disabled={loading}>
-              {loading ? 'loading..' : 'Register'}
-            </Button>
+          {loading ? <Spinner /> : <Button variant="success" type="submit" disabled={loading}>Register</Button>}
             <br />
             <small>
               Already have an account? <Link to="/login">Login</Link>
