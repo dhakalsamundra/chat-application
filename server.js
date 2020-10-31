@@ -11,6 +11,7 @@ const server = new ApolloServer({
   typeDefs,
   resolvers,
   context: contextMiddleware,
+  subscriptions: { path: '/' },
 });
 
 server.listen().then(({ url, subscriptionsUrl }) => {
