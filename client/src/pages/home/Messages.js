@@ -3,6 +3,7 @@ import { gql, useLazyQuery, useMutation } from '@apollo/client'
 import { Col, Form } from 'react-bootstrap'
 
 import { useMessageDispatch, useMessageState } from '../../context/message'
+import Spinner from '../Spinner'
 
 import EachMessage from './EachMessage'
 
@@ -26,6 +27,9 @@ const GET_MESSAGES = gql`
       to
       content
       createdAt
+      reactions{
+        uuid content
+      }
     }
   }
 `
@@ -80,7 +84,7 @@ export default function Messages() {
   if (!messages && !messagesLoading) {
     selectedChatMarkup = <p className="info-text">Select a friend</p>
   } else if (messagesLoading) {
-    selectedChatMarkup = <p className="info-text">Loading..</p>
+    selectedChatMarkup = <p className="info-text"><Spinner/></p>
   } else if (messages.length > 0) {
     selectedChatMarkup = messages.map((message, index) => (
       <Fragment key={message.uuid}>
@@ -101,13 +105,13 @@ export default function Messages() {
   }
 
   return (
-    <Col xs={10} md={8}>
-      <div className="messages-box d-flex flex-column-reverse">
+    <Col xs={10} md={8} className="p-0">
+      <div className="messages-box d-flex flex-column-reverse p-3">
         {selectedChatMarkup}
       </div>
-      <div>
+      <div className="px-3 py-2">
         <Form onSubmit={submitMessage}>
-          <Form.Group className="d-flex align-items-center">
+          <Form.Group className="d-flex align-items-center m-0">
             <Form.Control
               type="text"
               className="message-input rounded-pill p-4 bg-secondary border-0"
