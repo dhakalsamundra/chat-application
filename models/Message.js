@@ -7,8 +7,10 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate(models) {
-      // define association here
+    static associate({Reaction}) {
+      // define association here. we have done with foreign key in another 
+      //model. so here, we are using the as instead of foreign key
+      this.hasMany(Reaction, { as: 'reactions'})
     }
   }
   Message.init(
