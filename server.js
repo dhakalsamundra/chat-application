@@ -1,5 +1,5 @@
 const { ApolloServer } = require('apollo-server');
-
+require('dotenv').config()
 const { sequelize } = require('./models')
 // The GraphQL schema
 const typeDefs = require('./graphql/typeDefs')
@@ -13,8 +13,9 @@ const server = new ApolloServer({
   context: contextMiddleware,
 });
 
-server.listen().then(({ url }) => {
+server.listen().then(({ url, subscriptionsUrl }) => {
   console.log(`Server ready at ${url}`);
+  console.log(`Server ready at ${subscriptionsUrl}`);
 
   sequelize.authenticate()
   .then(()=> console.log('Database connected..'))
