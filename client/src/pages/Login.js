@@ -4,6 +4,7 @@ import { gql, useLazyQuery } from '@apollo/client'
 import { Link } from 'react-router-dom'
 
 import { useAuthDispatch } from '../context/auth'
+import Spinner from './Spinner'
 
 const LOGIN_USER = gql`
   query login($username: String!, $password: String!) {
@@ -26,7 +27,7 @@ export default function Register(props) {
   const dispatch = useAuthDispatch()
 
   const [loginUser, { loading }] = useLazyQuery(LOGIN_USER, {
-    onError: (err) => setErrors(err.graphQLErrors[0].extensions.errors),
+    onError: (err) => setErrors(err.graphQLErrors[0].extensions.errors, console.error(err)),
     onCompleted(data) {
       dispatch({ type: 'LOGIN', payload: data.login })
       window.location.href = '/'
@@ -71,9 +72,7 @@ export default function Register(props) {
             />
           </Form.Group>
           <div className="text-center">
-            <Button variant="success" type="submit" disabled={loading}>
-              {loading ? 'loading..' : 'Login'}
-            </Button>
+          {loading ? <Spinner /> : <Button variant="success" type="submit" disabled={loading}>LogIn</Button>}
             <br />
             <small>
               Don't have an account? <Link to="/register">Register</Link>
