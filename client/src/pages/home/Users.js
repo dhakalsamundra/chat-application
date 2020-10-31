@@ -4,6 +4,7 @@ import { Col, Image } from 'react-bootstrap'
 import classNames from 'classnames'
 
 import { useMessageDispatch, useMessageState } from '../../context/message'
+import Spinner from '../Spinner'
 
 const GET_USERS = gql`
   query getUsers {
@@ -35,7 +36,7 @@ export default function Users() {
 
   let usersMarkup
   if (!users || loading) {
-    usersMarkup = <p>Loading..</p>
+    usersMarkup = <Spinner />
   } else if (users.length === 0) {
     usersMarkup = <p>No users have joined yet</p>
   } else if (users.length > 0) {
